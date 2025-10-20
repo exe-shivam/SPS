@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exam Result Report Card</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-600 to-indigo-700 min-h-screen flex items-center justify-center p-6">
+
+  <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full p-8">
+    <h2 class="text-3xl font-semibold text-center text-indigo-700 mb-6">Exam Result Report Card</h2>
+
+    <div id="userDetails" class="mb-6 space-y-1 text-gray-700">
+      <p><span class="font-semibold">Name:</span> <span id="userName"></span></p>
+      <p><span class="font-semibold">Registration ID:</span> <span id="userRegId"></span></p>
+      <p><span class="font-semibold">Email:</span> <span id="userEmail"></span></p>
+      <p><span class="font-semibold">Exam Date:</span> <span id="examDate"></span></p>
+    </div>
+
+    <div id="scoreSummary" class="grid grid-cols-2 gap-4 text-gray-800 mb-6">
+      <div class="bg-indigo-50 rounded-lg p-4 text-center shadow">
+        <p class="font-semibold">Correct Answers</p>
+        <p id="correctCount" class="text-2xl text-green-600 mt-1"></p>
+      </div>
+      <div class="bg-indigo-50 rounded-lg p-4 text-center shadow">
+        <p class="font-semibold">Incorrect Answers</p>
+        <p id="wrongCount" class="text-2xl text-red-600 mt-1"></p>
+      </div>
+      <div class="bg-indigo-50 rounded-lg p-4 text-center shadow">
+        <p class="font-semibold">Not Attempted</p>
+        <p id="notAttemptedCount" class="text-2xl text-yellow-600 mt-1"></p>
+      </div>
+      <div class="bg-indigo-50 rounded-lg p-4 text-center shadow">
+        <p class="font-semibold">Score %</p>
+        <p id="scorePercent" class="text-2xl text-indigo-700 mt-1"></p>
+      </div>
+    </div>
+
+    <div id="passFailStatus" class="text-center font-bold text-xl mb-3"></div>
+
+    <div id="gradeBox" class="text-center font-extrabold text-5xl rounded-lg py-3 w-36 mx-auto mb-6"></div>
+
+    <button id="toggleSummaryBtn" class="block mx-auto mb-6 px-5 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition">
+      Show Question-wise Summary
+    </button>
+
+    <div id="questionSummary" class="space-y-2 max-h-64 overflow-y-auto border-t border-indigo-300 pt-4 hidden">
+      <!-- question-wise summary will appear here -->
+    </div>
+
+    <button id="downloadPdfBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition">
+      Download PDF Report
+    </button>
+    </div>
+
+  <script>
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    const user = {
+      name: decodeURIComponent(params.get("fullName") || "N/A"),
+      regId: decodeURIComponent(params.get("studentId") || "N/A"),
+      email: decodeURIComponent(params.get("email") || "N/A"),
+      examDate: new Date().toLocaleDateString(),
+    };
+
+    const totalQuestions = 25;
+
+    // Parse questionResults JSON safely
+    let questionResults = [];
+    try {
+      questionResults = JSON.parse(decodeURIComponent(params.get("questionResults")) || "[]");
+    } catch (e) {
+      questionResults = [];
+    }
+
+    // Calculate counts
+    const correctCount = questionResults.filter(q => q.status === 'correct').length;
+    const wrongCount = questionResults.filter(q => q.status === 'wrong').length;
+    const notAttemptedCount = questionResults.filter(q => q.status === 'notAnswered').length;
+    const scorePercent = ((correctCount / totalQuestions) * 100).toFixed(2);
+
+    // Determine grade and pass/fail
+    let grade = '';
+    let passFailStatus = '';
+
+    if(scorePercent < 40){
+      grade = 'Fail';
+      passFailStatus = 'Fail';
+    } else if(scorePercent >= 40 && scorePercent < 75){
+      grade = 'B';
+      passFailStatus = 'Pass';
+    } else if(scorePercent >= 75 && scorePercent < 85){
+      grade = 'A';
+      passFailStatus = 'Pass';
+    } else if(scorePercent >= 85 && scorePercent < 95){
+      grade = 'A+';
+      passFailStatus = 'Pass';
+    } else {
+      grade = 'A++';
+      passFailStatus = 'Pass';
+    }
+
+    // Grade colors for Tailwind
+    const gradeColors = {
+      'A++': 'bg-green-600 text-white',
+      'A+': 'bg-green-500 text-white',
+      'A': 'bg-green-400 text-white',
+      'B': 'bg-blue-400 text-white',
+      'Fail': 'bg-red-500 text-white'
+    };
+
+    const statusColors = {
+      'Pass': 'text-green-700',
+      'Fail': 'text-red-600'
+    };
+
+    // Set user details
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userRegId').textContent = user.regId;
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('examDate').textContent = user.examDate;
+
+    // Set score summary
+    document.getElementById('correctCount').textContent = correctCount;
+    document.getElementById('wrongCount').textContent = wrongCount;
+    document.getElementById('notAttemptedCount').textContent = notAttemptedCount;
+    document.getElementById('scorePercent').textContent = scorePercent;
+
+    // Set pass/fail status and grade
+    const statusEl = document.getElementById('passFailStatus');
+    statusEl.textContent = passFailStatus;
+    statusEl.className = `text-center font-bold text-xl mb-3 ${statusColors[passFailStatus]}`;
+
+    const gradeBox = document.getElementById('gradeBox');
+    gradeBox.textContent = grade;
+    gradeBox.className = `text-center font-extrabold text-5xl rounded-lg py-3 w-36 mx-auto mb-6 ${gradeColors[grade]}`;
+
+    // Question-wise summary toggle
+    const summaryDiv = document.getElementById('questionSummary');
+    const toggleBtn = document.getElementById('toggleSummaryBtn');
+
+    toggleBtn.addEventListener('click', () => {
+      if (summaryDiv.classList.contains('hidden')) {
+        summaryDiv.classList.remove('hidden');
+        toggleBtn.textContent = 'Hide Question-wise Summary';
+      } else {
+        summaryDiv.classList.add('hidden');
+        toggleBtn.textContent = 'Show Question-wise Summary';
+      }
+    });
+
+    // Render question-wise summary
+    function renderQuestionSummary(){
+      summaryDiv.innerHTML = ''; // clear
+
+      questionResults.forEach(q => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center gap-3 px-3 py-1 rounded-md text-sm font-medium';
+
+        if(q.status === 'correct') {
+          div.classList.add('bg-green-100', 'text-green-700');
+          div.innerHTML = `<span class="font-semibold w-10">Q${q.id}</span> Correct`;
+        }
+        else if(q.status === 'wrong') {
+          div.classList.add('bg-red-100', 'text-red-700');
+          div.innerHTML = `<span class="font-semibold w-10">Q${q.id}</span> Wrong`;
+        }
+        else {
+          div.classList.add('bg-yellow-100', 'text-yellow-800');
+          div.innerHTML = `<span class="font-semibold w-10">Q${q.id}</span> Not Attempted`;
+        }
+
+        summaryDiv.appendChild(div);
+      });
+    }
+
+    renderQuestionSummary();
+
+    // PDF Download button
+    document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(20);
+      doc.setTextColor(61, 61, 61);
+      doc.text("Exam Result Report Card", 105, 20, null, null, "center");
+
+      doc.setFontSize(12);
+      doc.setTextColor(40, 40, 40);
+
+      // User details
+      doc.text(`Name: ${user.name}`, 20, 40);
+      doc.text(`Registration ID: ${user.regId}`, 20, 50);
+      doc.text(`Email: ${user.email}`, 20, 60);
+      doc.text(`Exam Date: ${user.examDate}`, 20, 70);
+
+      // Score summary
+      doc.text(`Correct Answers: ${correctCount}`, 20, 90);
+      doc.text(`Incorrect Answers: ${wrongCount}`, 20, 100);
+      doc.text(`Not Attempted: ${notAttemptedCount}`, 20, 110);
+      doc.text(`Score: ${scorePercent}%`, 20, 120);
+
+      // Pass/Fail and grade
+      doc.setFontSize(14);
+      if(passFailStatus === 'Pass'){
+        doc.setTextColor(0, 128, 0);
+      } else {
+        doc.setTextColor(200, 0, 0);
+      }
+      doc.text(`Status: ${passFailStatus}`, 20, 140);
+      doc.text(`Grade: ${grade}`, 20, 150);
+
+      // If question summary is visible, add it to PDF
+      if(!summaryDiv.classList.contains('hidden')){
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Question-wise Summary:", 20, 170);
+
+        let y = 180;
+        questionResults.forEach(q => {
+          if(y > 280){ // new page
+            doc.addPage();
+            y = 20;
+          }
+          let statusText = '';
+          if(q.status === 'correct') statusText = 'Correct';
+          else if(q.status === 'wrong') statusText = 'Wrong';
+          else statusText = 'Not Attempted';
+
+          doc.text(`Q${q.id}: ${statusText}`, 20, y);
+          y += 10;
+        });
+      }
+
+      doc.save(`Result_Report_${user.regId}.pdf`);
+    });
+  </script>
+ 
+
+</body>
+</html>

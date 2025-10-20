@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CS Exam | Live</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+    }
+    .status-unviewed { background-color: #d1d5db; }
+    .status-answered { background-color: #10b981; }
+    .status-unanswered { background-color: #ef4444; }
+    .status-current { background-color: #6366f1; }
+  </style>
+</head>
+<body class="min-h-screen flex items-start justify-center py-10 text-white">
+  <div class="w-full max-w-6xl bg-white text-gray-800 rounded-xl shadow-lg flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-indigo-600 to-purple-500 text-white p-4">
+      <div>
+        <h1 class="text-xl font-bold">Intrance Exam for Admission</h1>
+        <p class="text-sm">Duration: 15 mins | Total Questions: 25 | Passing: 40%</p>
+      </div>
+      <div class="text-sm mt-3 md:mt-0">
+        <div><strong>Name:</strong> <span id="nameDisplay"></span></div>
+        <div><strong>Reg ID:</strong> <span id="studentIdDisplay"></span></div>
+        <div><strong>Email:</strong> <span id="emailDisplay"></span></div>
+      </div>
+      <div class="ml-auto text-lg font-semibold text-white md:ml-8 mt-4 md:mt-0">
+        ⏰ <span id="timer">15:00</span>
+      </div>
+    </div>
+
+    <!-- Main Body -->
+    <div class="flex flex-grow">
+      <!-- Sidebar -->
+      <div class="w-1/4 bg-gray-100 p-4 space-y-4 border-r">
+        <h2 class="text-lg font-semibold">Questions</h2>
+        <div id="questionPalette" class="grid grid-cols-5 gap-2 text-sm"></div>
+        <div class="mt-4 text-sm space-y-1">
+          <div><span class="inline-block w-3 h-3 rounded-full bg-gray-400 mr-2"></span> Not Visited</div>
+          <div><span class="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span> Answered</div>
+          <div><span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span> Not Answered</div>
+          <div><span class="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2"></span> Current</div>
+        </div>
+      </div>
+
+      <!-- Question Area -->
+      <div class="w-3/4 p-6 flex flex-col">
+        <div id="questionBox" class="flex-grow mb-6"></div>
+        <div class="flex justify-between items-center">
+          <div>
+            <button id="prevBtn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Previous</button>
+            <button id="nextBtn" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 ml-2">Next</button>
+          </div>
+          <button id="submitBtn" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            Submit Exam
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const fullName = decodeURIComponent(params.get('fullName') || 'N/A');
+    const email = decodeURIComponent(params.get('email') || 'N/A');
+    const studentId = decodeURIComponent(params.get('studentId') || 'N/A');
+
+    document.getElementById('nameDisplay').textContent = fullName;
+    document.getElementById('emailDisplay').textContent = email;
+    document.getElementById('studentIdDisplay').textContent = studentId;
+
+    const questions = [
+  { id: 1, text: "What does JVM stand for?", options: ["Java Virtual Machine", "Java Variable Memory", "Joint Virtual Module", "Java Verified Module"], correct: 0, answer: null, viewed: false },
+  { id: 2, text: "Which data structure uses FIFO principle?", options: ["Stack", "Queue", "Tree", "Graph"], correct: 1, answer: null, viewed: false },
+  { id: 3, text: "Which SQL command is used to remove a table from a database?", options: ["DELETE", "DROP", "REMOVE", "ERASE"], correct: 1, answer: null, viewed: false },
+  { id: 4, text: "Which of the following is not a programming paradigm?", options: ["Functional", "Object-Oriented", "Procedural", "Hexagonal"], correct: 3, answer: null, viewed: false },
+  { id: 5, text: "Which algorithm is used to find the shortest path in a graph?", options: ["Prim's", "Kruskal's", "Dijkstra's", "Floyd-Warshall"], correct: 2, answer: null, viewed: false },
+  { id: 6, text: "Which is a NoSQL database?", options: ["Oracle", "MySQL", "MongoDB", "PostgreSQL"], correct: 2, answer: null, viewed: false },
+  { id: 7, text: "Which command is used to initialize a Git repository?", options: ["git init", "git start", "git new", "git create"], correct: 0, answer: null, viewed: false },
+  { id: 8, text: "In C, which operator is used to get the address of a variable?", options: ["*", "&", "@", "%"], correct: 1, answer: null, viewed: false },
+  { id: 9, text: "What does the 'static' keyword mean in Java?", options: ["Creates a new instance", "Shared among all objects", "Immutable", "Temporary"], correct: 1, answer: null, viewed: false },
+  { id: 10, text: "Which protocol is used to send emails?", options: ["SMTP", "FTP", "HTTP", "POP3"], correct: 0, answer: null, viewed: false },
+  { id: 11, text: "What is the default port number of MySQL?", options: ["3306", "8080", "1521", "5432"], correct: 0, answer: null, viewed: false },
+  { id: 12, text: "Which layer in the OSI model handles routing?", options: ["Transport", "Network", "Data Link", "Session"], correct: 1, answer: null, viewed: false },
+  { id: 13, text: "What is the time complexity of binary search?", options: ["O(n)", "O(n log n)", "O(log n)", "O(n^2)"], correct: 2, answer: null, viewed: false },
+  { id: 14, text: "Which HTML tag is used to link CSS?", options: ["style", "script", "css", "link"], correct: 3, answer: null, viewed: false },
+  { id: 15, text: "Which of the following is not a JavaScript framework?", options: ["React", "Vue", "Django", "Angular"], correct: 2, answer: null, viewed: false },
+  { id: 16, text: "Which sorting algorithm is best in average case?", options: ["Bubble Sort", "Merge Sort", "Selection Sort", "Insertion Sort"], correct: 1, answer: null, viewed: false },
+  { id: 17, text: "Which keyword is used to inherit a class in Java?", options: ["this", "extends", "implements", "inherits"], correct: 1, answer: null, viewed: false },
+  { id: 18, text: "What does DNS stand for?", options: ["Domain Name Server", "Dynamic Name System", "Domain Number System", "Domain Name System"], correct: 3, answer: null, viewed: false },
+  { id: 19, text: "Which data structure is used for recursion?", options: ["Queue", "Array", "Stack", "Linked List"], correct: 2, answer: null, viewed: false },
+  { id: 20, text: "Which function is used to count rows in SQL?", options: ["SUM()", "COUNT()", "TOTAL()", "NUMBER()"], correct: 1, answer: null, viewed: false },
+  { id: 21, text: "Which component handles user interface in MVC?", options: ["Model", "Controller", "View", "Router"], correct: 2, answer: null, viewed: false },
+  { id: 22, text: "Which tool compiles Java code?", options: ["javac", "java", "compile", "jvm"], correct: 0, answer: null, viewed: false },
+  { id: 23, text: "Which one is an interpreted language?", options: ["C", "C++", "Java", "Python"], correct: 3, answer: null, viewed: false },
+  { id: 24, text: "Which is used to detect errors in data transmission?", options: ["Firewall", "Antivirus", "Parity Bit", "Compiler"], correct: 2, answer: null, viewed: false },
+  { id: 25, text: "Which of these is not an operating system?", options: ["Linux", "Windows", "Oracle", "macOS"], correct: 2, answer: null, viewed: false }
+];
+ 
+
+    while (questions.length < 25) {
+      const id = questions.length + 1;
+      questions.push({ id, text: `Sample Question ${id}?`, options: ["A", "B", "C", "D"], correct: Math.floor(Math.random() * 4), answer: null, viewed: false });
+    }
+
+    const palette = document.getElementById('questionPalette');
+    const questionBox = document.getElementById('questionBox');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    let currentIndex = 0;
+
+    function renderPalette() {
+      palette.innerHTML = '';
+      questions.forEach((q, i) => {
+        let status = 'status-unviewed';
+        if (i === currentIndex) status = 'status-current';
+        else if (q.answer !== null) status = 'status-answered';
+        else if (q.viewed) status = 'status-unanswered';
+
+        const btn = document.createElement('button');
+        btn.textContent = i + 1;
+        btn.className = `w-8 h-8 rounded-full text-white text-sm font-bold ${status}`;
+        btn.onclick = () => {
+          currentIndex = i;
+          renderQuestion();
+        };
+        palette.appendChild(btn);
+      });
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      q.viewed = true;
+      renderPalette();
+
+      questionBox.innerHTML = `
+        <div>
+          <h2 class="text-xl font-semibold mb-2">Question ${q.id}</h2>
+          <p class="mb-4">${q.text}</p>
+          <div class="space-y-2">
+            ${q.options.map((opt, i) => `
+              <div class="flex items-center">
+                <input type="radio" name="q${q.id}" id="q${q.id}_opt${i}" ${q.answer === i ? 'checked' : ''}
+                  onclick="selectAnswer(${i})" class="mr-2">
+                <label for="q${q.id}_opt${i}">${opt}</label>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    window.selectAnswer = function (index) {
+      questions[currentIndex].answer = index;
+      renderPalette();
+    };
+
+    prevBtn.onclick = () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    };
+
+    nextBtn.onclick = () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    };
+
+    submitBtn.onclick = () => {
+      const results = questions.map(q => {
+        if (q.answer === null) return { id: q.id, status: 'notAnswered' };
+        return { id: q.id, status: q.answer === q.correct ? 'correct' : 'wrong' };
+      });
+
+      const query = new URLSearchParams({
+        fullName,
+        email,
+        studentId,
+        questionResults: encodeURIComponent(JSON.stringify(results))
+      });
+
+      window.location.href = `screen3.html?${query.toString()}`;
+    };
+
+    // Timer: 15 minutes
+    let timeLeft = 15 * 60;
+    const timerEl = document.getElementById('timer');
+    const timerInterval = setInterval(() => {
+      const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+      const sec = String(timeLeft % 60).padStart(2, '0');
+      timerEl.textContent = `${min}:${sec}`;
+      timeLeft--;
+
+      if (timeLeft < 0) {
+        clearInterval(timerInterval);
+        alert("⏰ Time's up! Your exam is being submitted.");
+        submitBtn.click();
+      }
+    }, 1000);
+
+    renderPalette();
+    renderQuestion();
+  </script>
+</body>
+</html>
