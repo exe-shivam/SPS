@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scottish Public School</title>
+</head>
+<style>
+    body,
+    html {
+        font-family: 'Roboto', sans-serif, Arial;
+        background-image: url('https://i.postimg.cc/jdSfLVRb/Whats-App-Image-2025-10-11-at-18-56-11.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .top-header {
+        background: rgba(0, 174, 255, 0.85);
+        padding: 10px 0;
+        border-bottom: 2px solid #ff0800;
+        text-align: center;
+    }
+
+    .hero-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 20px 0;
+    }
+
+    .nav-bar {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px 0;
+        text-align: center;
+        margin: 10px 0;
+        border-radius: 5px;
+    }
+
+    .nav-bar a {
+        margin: 0 20px;
+        text-decoration: none;
+        color: #00aeff;
+        font-weight: bold;
+        font-size: 16px;
+        transition: color 0.3s ease;
+    }
+
+    .nav-bar a:hover {
+        color: #ff0800;
+    }
+
+    a:not(.nav-bar a) {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    a:hover:not(.nav-bar a) {
+        color: #ff0800;
+        text-shadow: 0 0 10px rgba(255, 8, 0, 0.7);
+    }
+
+    @media (max-width: 768px) {
+        .nav-bar a {
+            display: block;
+            margin: 10px 0;
+        }
+    }
+
+    .col-item {
+        background-color: white;
+        margin-right: 35%;
+        margin-left: 35%;
+        border-radius: 5%;
+        padding-bottom: 1%;
+    }
+
+    .col-item:hover {
+        box-shadow: 0 0 25px rgba(0, 174, 255, 0.5);
+        transition: 0.5s ease all;
+        transform: scale(1.05);
+    }
+
+    .list {
+        color: black;
+    }
+
+    .footer-span {
+        font-weight: bold;
+        color: #00aeff;
+    }
+
+    .footer-span:hover {
+        color: #ff0800;
+    }
+
+    .last-part {
+        text-align: center;
+        background-color: white;
+        padding-bottom: 1%;
+        padding-top: 1%;
+        border-radius: 8px;
+        margin-top: 500px;
+    }
+
+    .last-part:hover {
+        box-shadow: 0 0 25px rgba(0, 174, 255, 0.5);
+        transition: 0.5s ease all;
+        transform: scale(1.05);
+    }
+
+    h2 {
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 24px;
+        background: linear-gradient(to Right, rgb(196, 4, 4), rgb(251, 46, 46), rgb(241, 63, 63), rgb(238, 72, 72), rgb(64, 64, 247), rgb(36, 36, 244), blue);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: rainbow 5s linear infinite;
+        text-align: center;
+    }
+
+    .column1 {
+        float: left;
+        width: 50%;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .column2 {
+        float: right;
+        width: 50%;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .text {
+        text-align: center;
+        font-size: 18px;
+
+    }
+
+    .img {
+        width: 29%;
+        height: 29%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgshivam {
+        width: 29.3%;
+        height: 29.3%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgaarohi {
+        width: 28%;
+        height: 28%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgaditya {
+        width: 32.5%;
+        height: 32.5%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgaryan {
+        width: 30.7%;
+        height: 30.7%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .h1 {
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 44px;
+        background: linear-gradient(to Right, rgb(196, 4, 4), rgb(251, 46, 46), rgb(241, 63, 63), rgb(238, 72, 72), rgb(64, 64, 247), rgb(36, 36, 244), blue);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: rainbow 5s linear infinite;
+        text-align: center;
+    }
+
+    .imgsonu {
+        width: 35.7%;
+        height: 35.7%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgsir {
+        width: 27.7%;
+        height: 27.7%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgsaurav {
+        width: 21.7%;
+        height: 21.7%;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+<body>
+    <div class="width-100 top-header">
+        <div class="container">
+            <div class="width-100">
+                <div class="headquote">
+                    <marquee>SCOTTISH PUBLIC SCHOOL : A POWERFUL EXAMPLE OF A LIFELONG FRIENDSHIP BETWEEN TWO
+                        STUDENTS, IT ALSO TEACH US THAT TO BECOME EDUCATED</marquee>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img src="https://i.postimg.cc/MGVcXZR2/po.png" alt="School Banner" class="hero-img">
+
+    <nav class="nav-bar container" style="background-color:#ffffff;">
+        <a href="index.html">About Us</a>
+        <a href="index.html">Director</a>
+        <a href="index.html">Principal</a>
+        <a href="index.html">Achievement</a>
+        <a href="index.html">Vision and Mission</a>
+        <a href="index.html">Houses</a>
+        <a href="index.html">Contact Us</a>
+        <a href="https://scottishktr.edvein.com/register" target="_blank">Apply For Admission</a>
+        <a href="https://scottishktr.edvein.com/" target="_blank">Parent's Corner</a>
+        <a href="Deveoper.html" target="_blank">Developers</a>
+        <a href="oes.html" target="_blank">Online Exam</a>
+        <a href="https://tour.panoee.net/690ca1ee13306e1799c0a5b5" target="_blank">Virtual
+            Tour</a>
+        <a href="https://exe-shivam.github.io/library/" target="_blank">Library Management System</a>
+    </nav>
+    <div class="nav-bar">
+        <h1 class="h1">OUR DEVELOPER</h1>
+    </div>
+    <div class="row">
+        <div class="column1">
+            <h2>SHIVAM KUMAR
+            </h2>
+            <img src="https://i.postimg.cc/8Cz4S607/Screenshot-2025-10-26-at-4-09-24-PM-removebg-preview.png"
+                alt=" shivam" class="imgshivam">
+            <br>
+            <p class="text">Website creator, app creator and leader of Digital Dreamerzz(All-Rounder)</p>
+
+        </div>
+        <div class="column1">
+            <h2>AAROHI</h2>
+            <img src="https://i.ibb.co/wZvGgtv4/cropped-circle-image-3-removebg-preview.png" alt="aarohi"
+                class="imgaarohi">
+            <br>
+            <p class="text">Assitant of Anu in making virtual tour</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column1">
+            <h2>NAMAN ANAND</h2>
+            <img src="https://i.postimg.cc/sxgFcqK1/IMG-20251031-175242-removebg-preview.png" alt="naman anand"
+                class="img">
+            <p class="text">Building Beautiful apps in flutterflow</p>
+        </div>
+        <div class="column1">
+            <h2>ANU MAHTO</h2>
+            <img src="https://i.ibb.co/Mk16K9nh/cropped-circle-image-1-removebg-preview.png" alt="anu mahto"
+                class="img">
+            <p class="text">Gave the ideas and suggestions for everything and made the virtual tour</p>
+        </div>
+
+        <div class="row">
+            <div class="column2">
+                <h2>ADITYA RAJ</h2>
+                <img src="https://i.ibb.co/Gvxx12P7/Whats-App-Image-2025-11-04-at-21-09-48-1b061737-removebg-preview.png"
+                    alt="aditya kumar" class="imgaditya">
+                <p class="text"> Made The PPT and Chatbot For the project as well as handled all the AI work</p>
+            </div>
+            <div class="column2">
+                <h2>ADITYA GUPTA</h2>
+                <img src="https://i.ibb.co/n8Bg5hyg/Screenshot-2025-11-03-184433-removebg-preview.png"
+                    alt="aditya gupta" class="img">
+                <p class="text">Gave The Idea For App Design</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column2">
+                <h2> UTKARSH RAJ GUNJAN</h2>
+                <img src="https://i.postimg.cc/Vst3CpH9/IMG-20251031-WA0056-removebg-preview.png"
+                    alt="utkarsh raj gunjan" class="img">
+                <p class="text">Assistant Website Creator And JavaScript Integration</p>
+            </div>
+            <div class="column2">
+                <h2>ARYAN RAJ</h2>
+                <img src="https://i.ibb.co/yF5Fw0xT/PHOTO-2025-11-05-13-54-06-removebg-preview.png" alt="aryan raj"
+                    class="imgaryan">
+                <p class="text"> API integration and AI work</p>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <h1 class="h1">OUR MENTOR</h1>
+        </div>
+        <div class="row">
+            <div class="column1">
+                <h2>SONU SHREYAM</h2>
+                <img src="https://i.ibb.co/5gmhZQ8W/Whats-App-Image-2025-11-01-at-2-00-41-PM.jpg" alt="naman anand"
+                    class="imgsonu">
+                <p class="text">A dedicated mentor who guided and encouraged us throughout our project, providing
+                    constant support and valuable insights.</p>
+            </div>
+            <div class="column1">
+                <h2>ANISH SHARMA</h2>
+                <img src="https://i.postimg.cc/8cjd8N6F/Screenshot-2025-11-07-083631-removebg-preview.png"
+                    alt="anu mahto" class="img">
+                <p class="text">A teacher who inspired, supported, and encouraged us at every step of our project
+                    journey.</p>
+            </div>
+            <div class="row">
+                <div class="column2">
+                    <h2>SANJAY BISWAS</h2>
+                    <img src="https://i.postimg.cc/PxN2mBMD/Whats-App-Image-2025-11-03-at-21-09-57-removebg-preview.png"
+                        alt="naman anand" class="imgsir">
+                    <p class="text">We are deeply thankful to our class teacher for their constant encouragement,
+                        guidance, and valuable suggestions during our project journey.</p>
+                </div>
+            
+                <div class="column1">
+                    <h2>SAURAV KUMAR</h2>
+                    <img src="https://i.ibb.co/0RVm5tJP/53438751091.png" alt="naman anand" class="imgsaurav">
+                    <p class="text">Building Beautiful apps in flutterflow</p>
+
+                </div>
+                
+                
+            </div>
+             <footer class="last-line">
+            <p class="last-part">
+                &copy; 2025 Scottish Public School Site, Developed by <span class="footer-span">Digital Dreamerssz</span>
+            </p>
+        </footer>
+</body>
+
+</html>
